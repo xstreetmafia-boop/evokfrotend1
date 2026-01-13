@@ -1,9 +1,24 @@
 /* Mobile Responsive Styles */
 @media (max-width: 768px) {
+
+    /* Dashboard Container */
     .app-container {
         flex-direction: column;
         padding: 0.5rem;
         gap: 1rem;
+    }
+
+    /* Auth Pages - Keep Visible */
+    .auth-container {
+        padding: 1rem !important;
+        min-height: 100vh;
+        display: flex !important;
+    }
+
+    .auth-card {
+        width: 100% !important;
+        max-width: 100% !important;
+        margin: auto;
     }
 
     /* Hide sidebar on mobile, show hamburger menu instead */
