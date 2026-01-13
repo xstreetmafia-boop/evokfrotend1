@@ -27,10 +27,6 @@ function InstallButton() {
         deferredPrompt.prompt();
         const { outcome } = await deferredPrompt.userChoice;
 
-        if (outcome === 'accepted') {
-            console.log('User installed the app');
-        }
-
         setDeferredPrompt(null);
         setShowButton(false);
     };

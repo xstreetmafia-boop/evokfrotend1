@@ -2,6 +2,7 @@ import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { useAuth } from './context/AuthContext';
 import PrivateRoute from './components/PrivateRoute';
+import ErrorBoundary from './components/ErrorBoundary';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import Dashboard from './pages/Dashboard';
@@ -12,7 +13,7 @@ function App() {
     const { isAuthenticated } = useAuth();
 
     return (
-        <>
+        <ErrorBoundary>
             <InstallPWA />
             <Routes>
                 <Route path="/login" element={isAuthenticated ? <Navigate to="/" /> : <LoginPage />} />
@@ -34,7 +35,7 @@ function App() {
                     }
                 />
             </Routes>
-        </>
+        </ErrorBoundary>
     );
 }
 

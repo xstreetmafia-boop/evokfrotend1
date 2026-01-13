@@ -1,14 +1,10 @@
-const CACHE_NAME = 'evok-lead-tracker-v1';
+const CACHE_NAME = 'evok-lead-tracker-v2';
 const urlsToCache = [
     '/',
     '/index.html',
-    '/src/main.jsx',
-    '/src/App.jsx',
-    '/src/index.css',
-    '/src/App.css',
-    '/src/calendar.css',
-    '/src/auth.css',
-    '/assets/evok_logo_final.png'
+    '/manifest.json',
+    '/icon-192.png',
+    '/icon-512.png'
 ];
 
 // Install event - cache resources
