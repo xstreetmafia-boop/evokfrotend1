@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import '../App.css'
 import '../calendar.css'
 import evokLogo from '../assets/evok_logo_final.png'
@@ -20,6 +21,7 @@ const DISTRICTS = [
 
 function Dashboard() {
   const { user, logout } = useAuth();
+  const navigate = useNavigate();
   const [leads, setLeads] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -181,6 +183,11 @@ function Dashboard() {
           </li>
           <li>Site Analysis</li>
           <li>Partners</li>
+          {user?.role === 'admin' && (
+            <li onClick={() => navigate('/admin')} style={{ color: '#fbbf24', fontWeight: '600' }}>
+              🔐 Admin Panel
+            </li>
+          )}
           <li>Settings</li>
         </ul>
 

@@ -96,4 +96,40 @@ export const authAPI = {
     }
 };
 
+// Admin API calls
+export const adminAPI = {
+    // User management
+    getAllUsers: async () => {
+        const response = await api.get('/admin/users');
+        return response.data;
+    },
+
+    createUser: async (userData) => {
+        const response = await api.post('/admin/users', userData);
+        return response.data;
+    },
+
+    updateUser: async (id, userData) => {
+        const response = await api.put(`/admin/users/${id}`, userData);
+        return response.data;
+    },
+
+    deleteUser: async (id) => {
+        const response = await api.delete(`/admin/users/${id}`);
+        return response.data;
+    },
+
+    // Analytics
+    getAnalytics: async () => {
+        const response = await api.get('/admin/analytics');
+        return response.data;
+    },
+
+    // Activity logs
+    getActivityLogs: async () => {
+        const response = await api.get('/admin/activity-logs');
+        return response.data;
+    }
+};
+
 export default api;

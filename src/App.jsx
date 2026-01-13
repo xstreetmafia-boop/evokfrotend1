@@ -5,6 +5,7 @@ import PrivateRoute from './components/PrivateRoute';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import Dashboard from './pages/Dashboard';
+import AdminPanel from './pages/AdminPanel';
 
 function App() {
     const { isAuthenticated } = useAuth();
@@ -14,10 +15,18 @@ function App() {
             <Route path="/login" element={isAuthenticated ? <Navigate to="/" /> : <LoginPage />} />
             <Route path="/register" element={isAuthenticated ? <Navigate to="/" /> : <RegisterPage />} />
             <Route
-                path="/*"
+                path="/"
                 element={
                     <PrivateRoute>
                         <Dashboard />
+                    </PrivateRoute>
+                }
+            />
+            <Route
+                path="/admin"
+                element={
+                    <PrivateRoute>
+                        <AdminPanel />
                     </PrivateRoute>
                 }
             />
