@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import InstallButton from '../components/InstallButton';
 import '../App.css';
 import '../auth.css';
 
@@ -29,6 +30,7 @@ function LoginPage() {
 
     return (
         <div className="auth-container">
+            <InstallButton />
             <div className="auth-card glass">
                 <h1>Welcome Back</h1>
                 <p className="auth-subtitle">Sign in to EVOK Lead Tracker</p>

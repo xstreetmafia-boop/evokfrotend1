@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import InstallButton from '../components/InstallButton';
 import '../App.css';
 import '../auth.css';
 
@@ -55,6 +56,7 @@ function RegisterPage() {
 
     return (
         <div className="auth-container">
+            <InstallButton />
             <div className="auth-card glass">
                 <h1>Create Account</h1>
                 <p className="auth-subtitle">Join EVOK Lead Tracker</p>
