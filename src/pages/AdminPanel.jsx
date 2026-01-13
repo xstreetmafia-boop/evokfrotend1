@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { adminAPI } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import '../App.css';
 
 function AdminPanel() {
     const { user } = useAuth();
+    const navigate = useNavigate();
     const [activeTab, setActiveTab] = useState('users');
     const [loading, setLoading] = useState(false);
 
@@ -128,15 +130,37 @@ function AdminPanel() {
             <div className="admin-panel" style={{ padding: '3rem', textAlign: 'center' }}>
                 <h2>Access Denied</h2>
                 <p>You do not have permission to access the admin panel.</p>
+                <button className="btn-primary" onClick={() => navigate('/')} style={{ marginTop: '1rem' }}>
+                    ← Back to Dashboard
+                </button>
             </div>
         );
     }
 
     return (
         <div className="admin-panel">
-            <div className="admin-header glass" style={{ marginBottom: '2rem', padding: '2rem' }}>
-                <h1>Admin Panel</h1>
-                <p style={{ color: 'var(--text-muted)' }}>Manage users, view analytics, and monitor system activity</p>
+            <div className="admin-header glass" style={{ marginBottom: '2rem', padding: '2rem', display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                <button
+                    onClick={() => navigate('/')}
+                    style={{
+                        background: 'rgba(255,255,255,0.1)',
+                        border: '1px solid rgba(255,255,255,0.2)',
+                        padding: '0.5rem 1rem',
+                        borderRadius: '8px',
+                        color: '#fff',
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '0.5rem',
+                        fontSize: '0.9rem'
+                    }}
+                >
+                    ← Back
+                </button>
+                <div>
+                    <h1 style={{ margin: 0 }}>Admin Panel</h1>
+                    <p style={{ color: 'var(--text-muted)', margin: '0.25rem 0 0' }}>Manage users, view analytics, and monitor system activity</p>
+                </div>
             </div>
 
             {/* Tab Navigation */}

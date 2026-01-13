@@ -6,31 +6,35 @@ import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import Dashboard from './pages/Dashboard';
 import AdminPanel from './pages/AdminPanel';
+import InstallPWA from './components/InstallPWA';
 
 function App() {
     const { isAuthenticated } = useAuth();
 
     return (
-        <Routes>
-            <Route path="/login" element={isAuthenticated ? <Navigate to="/" /> : <LoginPage />} />
-            <Route path="/register" element={isAuthenticated ? <Navigate to="/" /> : <RegisterPage />} />
-            <Route
-                path="/"
-                element={
-                    <PrivateRoute>
-                        <Dashboard />
-                    </PrivateRoute>
-                }
-            />
-            <Route
-                path="/admin"
-                element={
-                    <PrivateRoute>
-                        <AdminPanel />
-                    </PrivateRoute>
-                }
-            />
-        </Routes>
+        <>
+            <InstallPWA />
+            <Routes>
+                <Route path="/login" element={isAuthenticated ? <Navigate to="/" /> : <LoginPage />} />
+                <Route path="/register" element={isAuthenticated ? <Navigate to="/" /> : <RegisterPage />} />
+                <Route
+                    path="/"
+                    element={
+                        <PrivateRoute>
+                            <Dashboard />
+                        </PrivateRoute>
+                    }
+                />
+                <Route
+                    path="/admin"
+                    element={
+                        <PrivateRoute>
+                            <AdminPanel />
+                        </PrivateRoute>
+                    }
+                />
+            </Routes>
+        </>
     );
 }
 
