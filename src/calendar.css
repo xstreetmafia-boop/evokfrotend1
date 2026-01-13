@@ -1,0 +1,213 @@
+/* Calendar Styles */
+.meeting-calendar {
+    margin-top: 2rem;
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.meeting-calendar h3 {
+    font-size: 1rem;
+    margin-bottom: 1rem;
+    color: var(--text-primary);
+}
+
+.react-calendar {
+    width: 100%;
+    background: transparent;
+    border: none;
+    font-family: inherit;
+    color: var(--text-primary);
+}
+
+.react-calendar__tile {
+    padding: 0.5rem;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 6px;
+    color: var(--text-muted);
+    transition: all 0.3s;
+}
+
+.react-calendar__tile:hover {
+    background: rgba(96, 165, 250, 0.2);
+    color: var(--text-primary);
+}
+
+.react-calendar__tile--active {
+    background: rgba(96, 165, 250, 0.3) !important;
+    color: var(--text-primary);
+}
+
+.react-calendar__tile--now {
+    background: rgba(168, 85, 247, 0.2);
+}
+
+/* Meeting indicators */
+.has-meeting {
+    background: rgba(74, 222, 128, 0.3) !important;
+    border: 2px solid #4ade80;
+    font-weight: bold;
+}
+
+.has-today-meeting {
+    background: rgba(253, 224, 71, 0.3) !important;
+    border: 2px solid #fde047;
+    font-weight: bold;
+}
+
+.has-overdue-meeting {
+    background: rgba(239, 68, 68, 0.3) !important;
+    border: 2px solid #ef4444;
+    font-weight: bold;
+}
+
+.react-calendar__navigation button {
+    color: var(--text-primary);
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 6px;
+    transition: all 0.3s;
+}
+
+.react-calendar__navigation button:hover {
+    background: rgba(96, 165, 250, 0.2);
+}
+
+.react-calendar__month-view__weekdays {
+    color: var(--text-muted);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+}
+
+/* Calendar Legend */
+.calendar-legend {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+}
+
+.legend-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+}
+
+.legend-dot.overdue {
+    background: #ef4444;
+}
+
+.legend-dot.today {
+    background: #fde047;
+}
+
+.legend-dot.upcoming {
+    background: #4ade80;
+}
+
+/* Edit/Delete Buttons */
+.action-buttons {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.btn-edit,
+.btn-delete {
+    padding: 0.5rem 0.75rem;
+    border: none;
+    border-radius: 6px;
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-weight: 600;
+}
+
+.btn-edit {
+    background: rgba(96, 165, 250, 0.2);
+    color: #60a5fa;
+    border: 1px solid rgba(96, 165, 250, 0.3);
+}
+
+.btn-edit:hover {
+    background: rgba(96, 165, 250, 0.3);
+    transform: translateY(-2px);
+}
+
+.btn-delete {
+    background: rgba(239, 68, 68, 0.2);
+    color: #ef4444;
+    border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+.btn-delete:hover {
+    background: rgba(239, 68, 68, 0.3);
+    transform: translateY(-2px);
+}
+
+/* Meeting Date Display */
+.meeting-date-cell {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.meeting-date {
+    font-size: 0.875rem;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-weight: 600;
+}
+
+.meeting-date.overdue {
+    background: rgba(239, 68, 68, 0.2);
+    color: #ef4444;
+}
+
+.meeting-date.today {
+    background: rgba(253, 224, 71, 0.2);
+    color: #fde047;
+}
+
+.meeting-date.upcoming {
+    background: rgba(74, 222, 128, 0.2);
+    color: #4ade80;
+}
+
+/* Date Picker in Modal */
+.date-picker-group {
+    margin-bottom: 1rem;
+}
+
+.date-picker-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: var(--text-primary);
+    font-weight: 600;
+}
+
+.date-picker-group input[type="datetime-local"],
+.date-picker-group input[type="date"] {
+    width: 100%;
+    padding: 0.75rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    color: var(--text-primary);
+    font-family: inherit;
+}
+
+.date-picker-group input[type="datetime-local"]:focus,
+.date-picker-group input[type="date"]:focus {
+    outline: none;
+    border-color: #60a5fa;
+    background: rgba(96, 165, 250, 0.1);
+}

@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import '../App.css'
+import '../calendar.css'
 import evokLogo from '../assets/evok_logo_final.png'
 import { leadAPI } from '../services/api'
 import { useAuth } from '../context/AuthContext'
+import MeetingCalendar from '../components/MeetingCalendar'
 
 const STATUS_OPTIONS = [
   "New", "Contacted", "Meeting Scheduled", "Quote Issued", "Quote Revised",
@@ -23,11 +25,16 @@ function Dashboard() {
   const [error, setError] = useState(null);
 
   const [showModal, setShowModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [editingLead, setEditingLead] = useState(null);
   const [newLead, setNewLead] = useState({ business: '', contact: '', status: 'New', location: '', district: 'Thiruvananthapuram' });
 
   // Status Log States
   const [pendingStatus, setPendingStatus] = useState(null);
   const [statusNote, setStatusNote] = useState('');
+  const [meetingDate, setMeetingDate] = useState('');
+  const [reminderDate, setReminderDate] = useState('');
+  const [reminderNote, setReminderNote] = useState('');
 
   // Navigation State
   const [currentView, setCurrentView] = useState('leads');
@@ -86,13 +93,25 @@ function Dashboard() {
 
   const finalizeStatusChange = async () => {
     try {
-      await leadAPI.update(pendingStatus.id, {
+      const updateData = {
         status: pendingStatus.to,
         note: statusNote || 'No description provided'
-      });
+      };
+
+      // If status is "Meeting Scheduled", include meeting and reminder dates
+      if (pendingStatus.to === 'Meeting Scheduled') {
+        if (meetingDate) updateData.meetingDate = meetingDate;
+        if (reminderDate) updateData.reminderDate = reminderDate;
+        if (reminderNote) updateData.reminderNote = reminderNote;
+      }
+
+      await leadAPI.update(pendingStatus.id, updateData);
       await fetchLeads(); // Refresh the list
       setPendingStatus(null);
       setStatusNote('');
+      setMeetingDate('');
+      setReminderDate('');
+      setReminderNote('');
     } catch (err) {
       console.error('Error updating lead:', err);
       alert('Failed to update lead status. Please try again.');
@@ -102,6 +121,41 @@ function Dashboard() {
   const handleViewDetails = (id) => {
     const lead = leads.find(l => l.id === id);
     setPendingStatus({ id, from: lead.status, to: lead.status, business: lead.business, isViewing: true });
+  };
+
+  const handleEditLead = (lead) => {
+    setEditingLead({
+      ...lead,
+      id: lead.id || lead._id
+    });
+    setShowEditModal(true);
+  };
+
+  const handleUpdateLead = async (e) => {
+    e.preventDefault();
+    try {
+      await leadAPI.update(editingLead.id, editingLead);
+      await fetchLeads();
+      setShowEditModal(false);
+      setEditingLead(null);
+    } catch (err) {
+      console.error('Error updating lead:', err);
+      alert('Failed to update lead. Please try again.');
+    }
+  };
+
+  const handleDeleteLead = async (id) => {
+    if (!window.confirm('Are you sure you want to delete this lead?')) {
+      return;
+    }
+
+    try {
+      await leadAPI.delete(id);
+      await fetchLeads();
+    } catch (err) {
+      console.error('Error deleting lead:', err);
+      alert('Failed to delete lead. Please try again.');
+    }
   };
 
   return (
@@ -129,6 +183,13 @@ function Dashboard() {
           <li>Partners</li>
           <li>Settings</li>
         </ul>
+
+        <MeetingCalendar
+          leads={leads}
+          onDateClick={(date, meetings) => {
+            console.log('Selected date:', date, 'Meetings:', meetings);
+          }}
+        />
 
         <div className="nav-footer">
           <p>Logged in as</p>
@@ -228,6 +289,72 @@ function Dashboard() {
           </div>
         )}
 
+        {/* Edit Lead Modal */}
+        {showEditModal && editingLead && (
+          <div className="modal-overlay">
+            <div className="modal-content glass">
+              <h2>Edit Lead</h2>
+              <form onSubmit={handleUpdateLead}>
+                <div className="form-group">
+                  <label>Client Name</label>
+                  <input
+                    type="text"
+                    required
+                    value={editingLead.business}
+                    onChange={e => setEditingLead({ ...editingLead, business: e.target.value })}
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Contact Number</label>
+                  <input
+                    type="text"
+                    required
+                    value={editingLead.contact}
+                    onChange={e => setEditingLead({ ...editingLead, contact: e.target.value })}
+                  />
+                </div>
+                <div className="form-row">
+                  <div className="form-group">
+                    <label>Location</label>
+                    <input
+                      type="text"
+                      required
+                      value={editingLead.location}
+                      onChange={e => setEditingLead({ ...editingLead, location: e.target.value })}
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label>District</label>
+                    <select
+                      value={editingLead.district}
+                      onChange={e => setEditingLead({ ...editingLead, district: e.target.value })}
+                    >
+                      {DISTRICTS.map(d => (
+                        <option key={d} value={d}>{d}</option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+                <div className="form-group">
+                  <label>Status</label>
+                  <select
+                    value={editingLead.status}
+                    onChange={e => setEditingLead({ ...editingLead, status: e.target.value })}
+                  >
+                    {STATUS_OPTIONS.map(opt => (
+                      <option key={opt} value={opt}>{opt}</option>
+                    ))}
+                  </select>
+                </div>
+                <div className="modal-actions">
+                  <button type="button" className="btn-secondary" onClick={() => setShowEditModal(false)}>Cancel</button>
+                  <button type="submit" className="btn-primary">Update Lead</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        )}
+
         {/* Activity Log Popup */}
         {pendingStatus && (
           <div className="modal-overlay">
@@ -260,16 +387,53 @@ function Dashboard() {
                 </div>
               )}
 
+
               {!pendingStatus.isViewing && (
-                <div className="form-group" style={{ marginTop: '1rem' }}>
-                  <label>Add Activity Note</label>
-                  <textarea
-                    placeholder="e.g., Client requested revision on quote price..."
-                    value={statusNote}
-                    onChange={(e) => setStatusNote(e.target.value)}
-                    className="log-textarea"
-                  />
-                </div>
+                <>
+                  {/* Show date pickers when status is "Meeting Scheduled" */}
+                  {pendingStatus.to === 'Meeting Scheduled' && (
+                    <>
+                      <div className="date-picker-group">
+                        <label>📅 Meeting Date & Time</label>
+                        <input
+                          type="datetime-local"
+                          value={meetingDate}
+                          onChange={(e) => setMeetingDate(e.target.value)}
+                        />
+                      </div>
+
+                      <div className="date-picker-group">
+                        <label>⏰ Reminder Date & Time</label>
+                        <input
+                          type="datetime-local"
+                          value={reminderDate}
+                          onChange={(e) => setReminderDate(e.target.value)}
+                        />
+                      </div>
+
+                      <div className="form-group">
+                        <label>📝 Reminder Note</label>
+                        <textarea
+                          placeholder="e.g., Call client 1 day before meeting..."
+                          value={reminderNote}
+                          onChange={(e) => setReminderNote(e.target.value)}
+                          className="log-textarea"
+                          rows="2"
+                        />
+                      </div>
+                    </>
+                  )}
+
+                  <div className="form-group" style={{ marginTop: '1rem' }}>
+                    <label>Add Activity Note</label>
+                    <textarea
+                      placeholder="e.g., Client requested revision on quote price..."
+                      value={statusNote}
+                      onChange={(e) => setStatusNote(e.target.value)}
+                      className="log-textarea"
+                    />
+                  </div>
+                </>
               )}
 
               <div className="history-preview">
@@ -435,7 +599,8 @@ function Dashboard() {
                     <th>Location</th>
                     <th>District</th>
                     <th>Status</th>
-                    <th>Action</th>
+                    <th>Meeting Date</th>
+                    <th>Actions</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -456,7 +621,24 @@ function Dashboard() {
                           ))}
                         </select>
                       </td>
-                      <td><button className="action-btn" onClick={() => handleViewDetails(lead.id)}>View Details</button></td>
+                      <td>
+                        {lead.meetingDate ? (
+                          <div className="meeting-date-cell">
+                            <span className={`meeting-date ${new Date(lead.meetingDate) < new Date() ? 'overdue' :
+                              new Date(lead.meetingDate).toDateString() === new Date().toDateString() ? 'today' :
+                                'upcoming'
+                              }`}>
+                              {new Date(lead.meetingDate).toLocaleDateString()} {new Date(lead.meetingDate).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                            </span>
+                          </div>
+                        ) : '-'}
+                      </td>
+                      <td>
+                        <div className="action-buttons">
+                          <button className="btn-edit" onClick={() => handleEditLead(lead)}>✏️ Edit</button>
+                          <button className="btn-delete" onClick={() => handleDeleteLead(lead.id)}>🗑️ Delete</button>
+                        </div>
+                      </td>
                     </tr>
                   ))}
                 </tbody>
